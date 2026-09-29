@@ -45,8 +45,8 @@ class Bot:
         """Main async entry point"""
         # Get data from api
         data = self.api.get_donations()
-        donations = data["donations"]
-        logger.info("Starting bot...")
+        donations = data.get("donations", [])
+        logger.info(f"Starting bot... Found {data.get('count', 0)} pending donations")
         
         if not donations:
             logger.info("No donations to send")
@@ -64,6 +64,7 @@ class Bot:
             user = donation["user"]
             stream_chat_link = donation["stream_chat_link"]
             time = donation["time"]
+            scheduled_date = donation.get("scheduled_date")  # Optional date field
             message = donation["message"]
             amount = donation["amount"]
             
@@ -75,7 +76,7 @@ class Bot:
             
             # Submit donation as async task
             task = asyncio.create_task(
-                self.submit_donation(id, stream_chat_link, user, time, message, amount)
+                self.submit_donation(id, stream_chat_link, user, time, message, amount, scheduled_date)
             )
             tasks.append(task)
             
@@ -125,8 +126,8 @@ class Bot:
             logged = False
             
             # Disable user
-            response = self.api.disable_user(user)
-            if response != "User disabled":
+            response = self.api.disable_user(user, reason="Login failed - cookies expired")
+            if not response:
                 self.__show_message__(f"bot {user} not disabled", id, is_error=True)
                                        
         return logged 
@@ -180,7 +181,7 @@ class Bot:
         return donation_sent
         
     async def submit_donation(self, id: int, stream_chat_link: str, user: str,
-                             time_str: str, message: str, amount: int):
+                             time_str: str, message: str, amount: int, scheduled_date: str = None):
         """Send donation to twitch chat
 
         Args:
@@ -190,6 +191,7 @@ class Bot:
             time_str (str): time text in format "hh:mm:ss"
             message (str): message to send
             amount (int): bits of the donation
+            scheduled_date (str, optional): scheduled date in YYYY-MM-DD format
         """
         
         # Wait random seconds
@@ -198,7 +200,15 @@ class Bot:
         # Donation time
         donation_time = datetime.strptime(time_str, "%H:%M:%S")
         now = datetime.now()
-        donation_time = donation_time.replace(year=now.year, month=now.month, day=now.day)
+        
+        # Handle optional scheduled date
+        if scheduled_date:
+            from datetime import date
+            scheduled_dt = datetime.strptime(scheduled_date, "%Y-%m-%d").date()
+            donation_time = donation_time.replace(year=scheduled_dt.year, month=scheduled_dt.month, day=scheduled_dt.day)
+        else:
+            # No date specified - use today
+            donation_time = donation_time.replace(year=now.year, month=now.month, day=now.day)
         
         # Validate lost donation times
         if now > donation_time:
@@ -276,7 +286,7 @@ class Bot:
         # Update donation status
         if not DEBUG_MODE:
             response = self.api.set_donation_done(id) 
-            if response != "Donation updated":
+            if not response:
                 self.__show_message__("not updated", id, is_error=True)
 
 if __name__ == "__main__":
