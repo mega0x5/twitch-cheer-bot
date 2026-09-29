@@ -1,18 +1,19 @@
 import os
 import requests
+from typing import Dict, Any
 from credentials import API_HOST, TOKEN
 
 
-class Api ():
+class Api:
 
-    def __requests_url__(self, endpoint: str) -> requests.get:
-        """ Request data from specific endpoint and and quit if error happens
+    def __requests_url__(self, endpoint: str) -> requests.Response:
+        """Request data from specific endpoint and quit if error happens
 
         Args:
             endpoint (str): endpoint to request, like "users" or "settings"
 
         Returns:
-            requests.get: response of requests to the endpoint
+            requests.Response: response of requests to the endpoint
         """
 
         # Request data to specific url
@@ -25,8 +26,8 @@ class Api ():
             print("Error requesting data from API. Check your token.")
             quit()
 
-    def get_donations(self) -> dict:
-        """ Get donations of the current live streams in comunidad mc, using the API
+    def get_donations(self) -> Dict[str, Any]:
+        """Get donations of the current live streams in comunidad mc, using the API
 
         Returns:
             dict: donations data.
@@ -55,8 +56,8 @@ class Api ():
         res = self.__requests_url__("donations")
         return res.json()
     
-    def set_donation_done (self, id:int) -> str:
-        """ Set status donation to done
+    def set_donation_done(self, id: int) -> str:
+        """Set status donation to done
 
         Args:
             id (int): donation id
@@ -69,8 +70,8 @@ class Api ():
         res = self.__requests_url__(endpoint)
         return res.text
     
-    def disable_user (self, name:str) -> str:
-        """ Disable user / bot when cookies are not valid
+    def disable_user(self, name: str) -> str:
+        """Disable user / bot when cookies are not valid
 
         Args:
             name (str): bot name

@@ -36,7 +36,7 @@ Project type: **client**
 
 # Build with
 
-<div align='center'><a href='https://www.python.org/' target='_blank'> <img src='https://cdn.svgporn.com/logos/python.svg' alt='Python' title='Python' height='50px'/> </a><a href='https://requests.readthedocs.io/en/latest/' target='_blank'> <img src='https://requests.readthedocs.io/en/latest/_static/requests-sidebar.png' alt='Requests' title='Requests' height='50px'/> </a><a href='https://github.com/marty90/PyChromeDevTools' target='_blank'> <img src='https://cdn.svgporn.com/logos/chrome.svg' alt='PyChromeDevTools' title='PyChromeDevTools' height='50px'/> </a></div>
+<div align='center'><a href='https://www.python.org/' target='_blank'> <img src='https://cdn.svgporn.com/logos/python.svg' alt='Python' title='Python' height='50px'/> </a><a href='https://requests.readthedocs.io/en/latest/' target='_blank'> <img src='https://requests.readthedocs.io/en/latest/_static/requests-sidebar.png' alt='Requests' title='Requests' height='50px'/> </a><a href='https://playwright.dev/python/' target='_blank'> <img src='https://playwright.dev/img/playwright-logo.svg' alt='Playwright' title='Playwright' height='50px'/> </a></div>
 
 # Related projects
 
@@ -58,30 +58,39 @@ Project type: **client**
 
 # Details
 
-The bot manage a single chrome window
-It don't login with the accounts, instead of that, the bot use cookies already saved in a Backend service. 
-All information required, like users, streams to cheer, comments, amounts, etc; its provided from a Django private app backend.
-
-## Features
-
-* Login with cookies
-* Cheer at specific time 
-	* Use custom message to cheer
-	* Use custom donation to cheer
-* Manage donations
-* Manage bots / users to donate
-* Mark donations already sent
+The bot manages a browser window using Playwright for automation.
+It doesn't login with the accounts, instead of that, the bot uses cookies already saved in a Backend service.
+All information required, like users, streams to cheer, comments, amounts, etc; is provided from a Django private app backend.
+
+## Features
+
+* Login with cookies
+* Cheer at specific time
+	* Use custom message to cheer
+	* Use custom donation to cheer
+* Manage donations
+* Manage bots / users to donate
+* Mark donations already sent
 * Disable bots / users with timeout cookies
+* Async/await for better performance
+* Logging for debugging
 
 # Roadmap
 
-* [x] Proxies
-* [x] Get donation from backend
-* [x] Submit cheers to specific stream
-* [x] Manage multiple donation with threading
-* [x] Project status for not overlap donations
-* [x] Update donation status in backend
-* [x] Disable users with time out cookies
-* [x] Auto open and close chrome
+* [x] Proxies
+* [x] Get donation from backend
+
+* [x] Submit cheers to specific stream
+
+* [x] Manage multiple donation with threading
+
+* [x] Project status for not overlap donations
+
+* [x] Update donation status in backend
+
+* [x] Disable users with time out cookies
+
+* [x] Auto open and close chrome
+
 * [x] Change proxy in each donation
 
